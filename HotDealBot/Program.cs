@@ -32,7 +32,6 @@ async Task Main()
     var client = services.GetRequiredService<DiscordSocketClient>();
 
     client.Log += LogAsync;
-    client.Ready += ReadyAsync;
 
     services.GetRequiredService<CommandService>().Log += LogAsync;
 
@@ -47,12 +46,6 @@ async Task Main()
 Task LogAsync(LogMessage log)
 {
     Console.WriteLine(log.ToString());
-    return Task.CompletedTask;
-}
-
-Task ReadyAsync()
-{
-    Console.WriteLine($"Connected as -> [] :)");
     return Task.CompletedTask;
 }
 

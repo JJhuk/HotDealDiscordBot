@@ -25,11 +25,11 @@ public class CommandHandler
         _client.MessageReceived += OnClientMessage;
     }
 
-    public async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
+    private async Task CommandExecutedAsync(Optional<CommandInfo> command, ICommandContext context, IResult result)
     {
         if (!command.IsSpecified)
         {
-            Console.WriteLine($"Command failed to execute for [{context.User.Username}] <-> [{result.ErrorReason}]!");
+            await context.Channel.SendMessageAsync($"{context.Message}");
             return;
         }
 
@@ -50,6 +50,11 @@ public class CommandHandler
     private async Task OnClientMessage(IDeletable arg)
     {
         if (arg is not SocketUserMessage message)
+        {
+            return;
+        }
+
+        if (message.Author.IsBot)
         {
             return;
         }
