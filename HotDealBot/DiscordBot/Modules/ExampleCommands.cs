@@ -1,12 +1,14 @@
+using System.Threading.Tasks;
 using Discord.Commands;
 
-namespace HotDealBot.DiscordBot.Modules;
-
-public class ExampleCommands : ModuleBase
+namespace HotDealBot.DiscordBot.Modules
 {
-    [Command("hello")]
-    public async Task HelloCommand()
+    public class ExampleCommands : ModuleBase
     {
-        await ReplyAsync($"Hello World : {Context.User}");
+        [Command("hello")]
+        public async Task HelloCommand()
+        {
+            await ReplyAsync($"Hello World : {Context.User}");
+        }
     }
 }
