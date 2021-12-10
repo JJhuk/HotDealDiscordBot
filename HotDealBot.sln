@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotDealBot", "HotDealBot\Ho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotDealServer", "HotDealServer\HotDealServer.csproj", "{E947E85A-7783-4D6A-B017-D16BFE890267}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HotDealServerTest", "HotDealServerTest\HotDealServerTest.csproj", "{40B602C3-D1D8-46E1-951E-9EEB5BA582F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{E947E85A-7783-4D6A-B017-D16BFE890267}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E947E85A-7783-4D6A-B017-D16BFE890267}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E947E85A-7783-4D6A-B017-D16BFE890267}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40B602C3-D1D8-46E1-951E-9EEB5BA582F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40B602C3-D1D8-46E1-951E-9EEB5BA582F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40B602C3-D1D8-46E1-951E-9EEB5BA582F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40B602C3-D1D8-46E1-951E-9EEB5BA582F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
