@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using HotDealServer.Models;
+using HotDealServer.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
@@ -14,12 +15,12 @@ namespace HotDealServer.Controllers
     public class CrawlingController : ControllerBase
     {
         private readonly ILogger<CrawlingController> _logger;
-        private readonly HotDealDbContext _dbContext;
+        private readonly HotDealItemService _itemService;
         
-        public CrawlingController(ILogger<CrawlingController> logger, HotDealDbContext dbContext)
+        public CrawlingController(ILogger<CrawlingController> logger, HotDealItemService itemService)
         {
             _logger = logger;
-            _dbContext = dbContext;
+            _itemService = itemService;
         }
 
         public async Task<ActionResult> CrawlingProducts(CancellationToken token = default)
@@ -27,7 +28,8 @@ namespace HotDealServer.Controllers
             try
             {
                 var hotDealProducts = await Crawling();
-                await _dbContext.AddAsync(hotDealProducts, token);
+                
+                await _itemService.Products.InsertManyAsync(hotDealProducts, cancellationToken: token);
             }
             catch (Exception e)
             {
@@ -35,11 +37,10 @@ namespace HotDealServer.Controllers
                 throw;
             }
 
-            await _dbContext.SaveChangesAsync(token);
             return Ok();
         }
 
-        private async Task<List<HotDealProduct>> Crawling()
+        private static async Task<List<HotDealProduct>> Crawling()
         {
             var revisionInfo = await new BrowserFetcher()
                 .DownloadAsync(BrowserFetcher.DefaultChromiumRevision);

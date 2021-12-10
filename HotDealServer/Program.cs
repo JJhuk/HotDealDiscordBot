@@ -1,17 +1,16 @@
-using System;
-using System.Threading.Tasks;
 using HotDealServer.Models;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using PuppeteerSharp;
+using HotDealServer.Services;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
 builder.Services
-    .AddDbContext<HotDealDbContext>(options => options.UseInMemoryDatabase("Products"));
+    .Configure<HotDealDatabaseSettings>(builder.Configuration
+        .GetSection(nameof(HotDealDatabaseSettings))) // HotDealDatabaseSettings라는 이름의 Configuration DI
+    .AddSingleton<IHotDealDatabaseSettings>(serviceProvider => serviceProvider
+        .GetRequiredService<IOptions<HotDealDatabaseSettings>>().Value)
+    .AddSingleton<HotDealItemService>()
+    .AddConnections();
 
 var app = builder.Build();
 
