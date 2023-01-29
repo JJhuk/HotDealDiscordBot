@@ -1,47 +1,54 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using System;
-using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
+using Discord.Interactions;
 using Discord.WebSocket;
-using HotDealBot.DiscordBot.Services;
+using HotDealBot;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 IConfiguration config;
+IServiceProvider services;
 
-ServiceProvider ConfigureServices() => new ServiceCollection()
-    .AddSingleton(config)
-    .AddSingleton<DiscordSocketClient>()
-    .AddSingleton<CommandService>()
-    .AddSingleton<CommandHandler>()
-    .BuildServiceProvider();
+void Configure()
+{
+    var socketConfig = new DiscordSocketConfig()
+    {
+        AlwaysDownloadUsers = true,
+        MessageCacheSize = 100,
+        GatewayIntents = GatewayIntents.AllUnprivileged,
+        LogLevel = LogSeverity.Info
+    };
+    
+    config = new ConfigurationBuilder()
+        .SetBasePath(AppContext.BaseDirectory)
+        .AddJsonFile("token.json")
+        .Build();
 
+    services = new ServiceCollection()
+        .AddSingleton(config)
+        .AddSingleton(socketConfig)
+        .AddSingleton<DiscordSocketClient>()
+        .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
+        .AddSingleton<InteractionHandler>()
+        .BuildServiceProvider();
+}
 
 async Task Main()
 {
-    var configurationBuilder = new ConfigurationBuilder();
-
-    configurationBuilder
-        .SetBasePath(AppContext.BaseDirectory)
-        .AddJsonFile("token.json");
-
-    config = configurationBuilder.Build();
-
-    await using var services = ConfigureServices();
+    Configure();
 
     var client = services.GetRequiredService<DiscordSocketClient>();
-
     client.Log += LogAsync;
 
-    services.GetRequiredService<CommandService>().Log += LogAsync;
+    // 커맨드들 등록
+    await services.GetRequiredService<InteractionHandler>()
+        .Initialize();
 
     await client.LoginAsync(TokenType.Bot, config["Token"]);
     await client.StartAsync();
-
-    await services.GetRequiredService<CommandHandler>().InitializeAsync();
-
+    
+    // 무한루프
     await Task.Delay(-1);
 }
 
