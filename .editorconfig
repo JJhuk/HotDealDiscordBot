@@ -1,0 +1,80 @@
+root = true
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+insert_final_newline = true
+trim_trailing_whitespace = true
+[*.{cs, csx}]
+max_line_length = 120
+indent_size = 4
+[*.{csproj, vbproj, vcxproj, vcxproj.filters, proj, projitems, shproj, manifest}]
+indent_size = 2
+[*.{props, targets, ruleset, config, nuspec, resx, vsixmanifest, vsct}]
+indent_size = 2
+[*.{yaml, yml, toml}]
+indent_size = 2
+[*.json]
+indent_size = 2
+[*.{ts, tsx, js, jsx, cjs, mjs}]
+indent_size = 2
+max_line_length = 120
+[*.sh]
+indent_size = 2
+max_line_length = 88
+[*.md]
+indent_size = 2
+max_line_length = 88
+[*.Jenkinsfile]
+indent_size = 2
+[*.proto]
+indent_size = 2
+[*.cs]
+dotnet_sort_system_directives_first = true
+csharp_using_directive_placement = outside_namespace
+csharp_style_var_elsewhere = true:suggestion
+csharp_style_var_for_built_in_types = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_preferred_modifier_order = public, private, protected, internal, static, extern, new, virtual, abstract, sealed, override, readonly, unsafe, volatile, async:suggestion
+csharp_indent_case_contents = true
+csharp_indent_case_contents_when_block = false
+dotnet_code_quality.interprocedural_analysis_kind = ContextSensitive
+dotnet_code_quality.CA1822.api_surface = private, internal
+dotnet_diagnostic.CA1305.severity = suggestion
+dotnet_diagnostic.CA1707.severity = suggestion
+dotnet_diagnostic.CA1716.severity = suggestion
+dotnet_diagnostic.CA1727.severity = suggestion
+dotnet_diagnostic.SA1117.severity = suggestion
+dotnet_diagnostic.SA1300.severity = suggestion
+dotnet_diagnostic.SA1310.severity = suggestion
+dotnet_diagnostic.CS1591.severity = silent
+dotnet_diagnostic.CA1711.severity = suggestion
+dotnet_diagnostic.CA1822.severity = suggestion
+dotnet_diagnostic.CA1826.severity = suggestion
+dotnet_diagnostic.CA1848.severity = silent
+dotnet_diagnostic.SA1000.severity = suggestion
+dotnet_diagnostic.SA1101.severity = silent
+dotnet_diagnostic.SA1108.severity = suggestion
+dotnet_diagnostic.SA1116.severity = silent
+dotnet_diagnostic.SA1123.severity = suggestion
+dotnet_diagnostic.SA1124.severity = suggestion
+dotnet_diagnostic.SA1201.severity = none
+dotnet_diagnostic.SA1202.severity = none
+dotnet_diagnostic.SA1203.severity = none
+dotnet_diagnostic.SA1204.severity = none
+dotnet_diagnostic.SA1214.severity = none
+dotnet_diagnostic.SA1402.severity = silent
+dotnet_diagnostic.SA1403.severity = suggestion
+dotnet_diagnostic.SA1512.severity = suggestion
+dotnet_diagnostic.SA1516.severity = silent
+dotnet_diagnostic.SA1600.severity = silent
+dotnet_diagnostic.SA1601.severity = silent
+dotnet_diagnostic.SA1602.severity = silent
+dotnet_diagnostic.SA1611.severity = silent
+dotnet_diagnostic.SA1615.severity = silent
+dotnet_diagnostic.SA1623.severity = none
+dotnet_diagnostic.SA1629.severity = silent
+dotnet_diagnostic.SA1642.severity = none
+dotnet_diagnostic.SA1649.severity = suggestion
+dotnet_diagnostic.SA1633.severity = none
+dotnet_diagnostic.CA1849.severity = warning

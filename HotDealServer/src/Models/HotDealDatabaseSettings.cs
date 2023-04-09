@@ -2,9 +2,9 @@ namespace HotDealServer.Models;
 
 public class HotDealDatabaseSettings : IHotDealDatabaseSettings
 {
-    public string ItemCollectionName { get; set; }
-    public string ConnectionString { get; set; }
-    public string DatabaseName { get; set; }
+    public required string ItemCollectionName { get; set; }
+    public required string ConnectionString { get; set; }
+    public required string DatabaseName { get; set; }
 }
 
 public interface IHotDealDatabaseSettings
