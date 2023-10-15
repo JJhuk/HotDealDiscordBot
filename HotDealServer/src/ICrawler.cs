@@ -2,5 +2,5 @@
 
 public interface ICrawler
 {
-    public Task<List<HotDealData>> Crawling();
+    public Task<List<HotDealData>?> Crawling();
 }

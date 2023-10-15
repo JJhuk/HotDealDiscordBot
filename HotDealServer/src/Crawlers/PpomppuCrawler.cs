@@ -12,10 +12,10 @@ public sealed class PpomppuCrawler : ICrawler, IDisposable
         _browserFetcher = new BrowserFetcher();
     }
 
-    public async Task<List<HotDealData>> Crawling()
+    public async Task<List<HotDealData>?> Crawling()
     {
         // can be exception
-        await _browserFetcher.DownloadAsync(BrowserFetcher.DefaultChromiumRevision);
+        await _browserFetcher.DownloadAsync();
         await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions
         {
             Headless = true,
@@ -44,7 +44,7 @@ public sealed class PpomppuCrawler : ICrawler, IDisposable
 
     private static async Task<int?> GetHotDealItemId(IPage page, int itemIndex)
     {
-        var itemIdXPath = await page.WaitForXPathAsync($"//*[@id=\"revolution_main_table\"]/tbody/tr[{itemIndex}]/td[1]");
+        var itemIdXPath = await page.WaitForSelectorAsync($"//*[@id=\"revolution_main_table\"]/tbody/tr[{itemIndex}]/td[1]");
 
         var itemId = await itemIdXPath.EvaluateFunctionAsync<int>("x => x.textContent");
 

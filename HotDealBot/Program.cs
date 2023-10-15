@@ -1,55 +1,53 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using Discord;
+﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-using HotDealBot;
+using HotDealBot.CommandHandlers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 IConfiguration config;
 IServiceProvider services;
 
-void Configure()
-{
-    var socketConfig = new DiscordSocketConfig()
-    {
-        AlwaysDownloadUsers = true,
-        MessageCacheSize = 100,
-        GatewayIntents = GatewayIntents.AllUnprivileged,
-        LogLevel = LogSeverity.Info
-    };
-    
-    config = new ConfigurationBuilder()
-        .SetBasePath(AppContext.BaseDirectory)
-        .AddJsonFile("token.json")
-        .Build();
-
-    services = new ServiceCollection()
-        .AddSingleton(config)
-        .AddSingleton(socketConfig)
-        .AddSingleton<DiscordSocketClient>()
-        .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
-        .AddSingleton<InteractionHandler>()
-        .BuildServiceProvider();
-}
+await Main();
+return;
 
 async Task Main()
 {
-    Configure();
+    ConfigureServices();
 
     var client = services.GetRequiredService<DiscordSocketClient>();
     client.Log += LogAsync;
+    client.Ready += ClientReady;
 
-    // 커맨드들 등록
-    await services.GetRequiredService<InteractionHandler>()
-        .Initialize();
+    var token = config.GetRequiredSection("Token").Value;
 
-    await client.LoginAsync(TokenType.Bot, config["Token"]);
+    if (token is null)
+    {
+        throw new InvalidOperationException("Discord Bot Token is not configured");
+    }
+
+    await client.LoginAsync(TokenType.Bot, token);
     await client.StartAsync();
-    
+    await services.GetRequiredService<CommandHandler>().InitializeAsync();
+
     // 무한루프
-    await Task.Delay(-1);
+    await Task.Delay(Timeout.Infinite);
+}
+
+async Task ClientReady()
+{
+    var guildIdSection = config.GetRequiredSection("GuildId").Value;
+    if (guildIdSection == null)
+    {
+        throw new InvalidOperationException("GuildId is not configured");
+    }
+
+    var value = ulong.Parse(guildIdSection);
+
+    var interactionService = services.GetRequiredService<InteractionService>();
+
+    // todo global
+    await interactionService.RegisterCommandsToGuildAsync(value);
 }
 
 Task LogAsync(LogMessage log)
@@ -58,4 +56,27 @@ Task LogAsync(LogMessage log)
     return Task.CompletedTask;
 }
 
-Main().GetAwaiter().GetResult();
+void ConfigureServices()
+{
+    var socketConfig = new DiscordSocketConfig()
+    {
+        AlwaysDownloadUsers = true,
+        MessageCacheSize = 100,
+        GatewayIntents = GatewayIntents.AllUnprivileged,
+        LogLevel = LogSeverity.Info,
+        UseInteractionSnowflakeDate = false,
+    };
+
+    config = new ConfigurationBuilder()
+        .SetBasePath(Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName)
+        .AddJsonFile("token.json")
+        .Build();
+
+    services = new ServiceCollection()
+        .AddSingleton(config)
+        .AddSingleton(socketConfig)
+        .AddSingleton<DiscordSocketClient>()
+        .AddSingleton<CommandHandler>()
+        .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
+        .BuildServiceProvider();
+}
