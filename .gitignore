@@ -6,3 +6,4 @@ riderModule.iml
 /.idea
 /HotDealServer/.local-chromium
 .DS_Store
+token.json
